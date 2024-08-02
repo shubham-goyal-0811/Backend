@@ -1,9 +1,21 @@
 // require('dotenv').config({path:'./env'})
-
-
+import dotenv from "dotenv";
+dotenv.config({
+    path:'./env'
+})
 import connectDB from './db/index.js';
 
-connectDB();
+connectDB()//a promise
+.then(
+    ()=>{
+        app.listen(process.env.PORT || 3000,()=>{
+            console.log(` Server is running at port ${process.env.PORT}`);
+        })
+    }
+)
+.catch((error)=>{
+    console.log("connection failed ",error);
+})
 
 
 /*
