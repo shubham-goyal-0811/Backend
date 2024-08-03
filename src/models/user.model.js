@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt"
 const userSchema = new Schema(
     {
         username:{
@@ -49,6 +49,49 @@ const userSchema = new Schema(
     {
         timestamps: true
     }
+
 )
+
+//here this function is not made an arrow function because it does not provide context and we need context here
+userSchema.pre("save",async function(next) {
+    //this if will ensure that our password is only hashed in db when its changed
+    // if there is any other change it wont be hashed again
+    if(!this.isModified("password"))    return next();
+    this.password = bcrypt.hash(this.password,10);//kisko encrypt krna hai, kitne rounds
+    next();
+
+})
+
+userSchema.methods.isPasswordCorrect = async function (password) {
+   return await bcrypt.compare(password,this.password);//returns boolean
+}
+
+userSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
+        {
+        _id : this._id,
+        email : this.email,
+        username : this.username,
+        fullname : this.fullname
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+        expiresIn : process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+
+userSchema.methods.generateRefreshToken = function () {
+    return jwt.sign(
+        {
+        _id : this._id,
+        
+        },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+        expiresIn : process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
 
 export const User = mongoose.mdoel("User",userSchema)
