@@ -1,26 +1,27 @@
 // require('dotenv').config({path:'./env'})
 import dotenv from "dotenv";
+import express from 'express'
+const app = express();
 dotenv.config({
     path:'./env'
 })
 import connectDB from './db/index.js';
 
-connectDB()//a promise
+connectDB()
 .then(
     ()=>{
-        app.listen(process.env.PORT || 3000,()=>{
-            console.log(` Server is running at port ${process.env.PORT}`);
+        
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
         })
     }
-)
-.catch((error)=>{
+).catch((error)=>{
     console.log("connection failed ",error);
 })
 
 
 /*
-import express from 'express'
-const app = express();
+
 
 // function connectDB(){}-> this will work but we can do a better professional approach
 
