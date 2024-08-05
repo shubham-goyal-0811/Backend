@@ -8,7 +8,7 @@ const asyncHandler = (requestHandler)=>{
 
 export { asyncHandler };
 
-// const asyncHandler = (fn) => async (req,res,next) =>{
+ /*const asyncHandler = (fn) => async (req,res,next) =>{
     try{
         //next is for the middle ware
         await fn(req,res,next)
@@ -19,4 +19,4 @@ export { asyncHandler };
             message:error.message
         })
     }
-//} //taking a function as arguement and passing it on to next function 
+} //taking a function as arguement and passing it on to next function*/ 
