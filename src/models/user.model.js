@@ -57,7 +57,7 @@ userSchema.pre("save",async function(next) {
     //this if will ensure that our password is only hashed in db when its changed
     // if there is any other change it wont be hashed again
     if(!this.isModified("password"))    return next();
-    this.password = bcrypt.hash(this.password,10);//kisko encrypt krna hai, kitne rounds
+    this.password = await bcrypt.hash(this.password,10);//kisko encrypt krna hai, kitne rounds
     next();
 
 })
