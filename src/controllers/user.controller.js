@@ -32,7 +32,7 @@ const registerUser = asyncHandler(async (req,res) =>{
         throw new ApiError(400, "Invalid email format");
     }
 
-    const existUser = User.findOne({
+    const existUser = await User.findOne({
         $or:[{username} , {email}]
     });
     if(existUser){
@@ -43,8 +43,10 @@ const registerUser = asyncHandler(async (req,res) =>{
     const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
 
-    if(avatarLocalPath){
-        throw new ApiError(400,"Avatar FIle is required");
+    if(!avatarLocalPath){
+        console.log("yeh vala");
+        
+        throw new ApiError(400,"Avatar File is required");
     }
 
 
@@ -60,12 +62,12 @@ const registerUser = asyncHandler(async (req,res) =>{
         coverImage : coverImg?.url|| "",
         email,
         password,
-        username : username.toLowerCase
+        username : username.toLowerCase()
     })
 
-    const userCreated = await User.findById(user._id).select([
+    const userCreated = await User.findById (user._id).select(
         "-password -refreshToken"
-    ]);
+    );
 
     if(!userCreated){
         throw new ApiError(500,"Something went wrong while registring the user");
